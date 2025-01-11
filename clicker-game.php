@@ -1,27 +1,27 @@
 <?php
 /*
-Plugin Name: Clicker Game with Speed and Income Upgrades
+Plugin Name: Clicker Game
 Description: A clicker game where you can increase time speed and earn money with upgrades.
-Version: 0.4
+Version: 0.6
 Author: Daniil Karataev
 */
 
 function clicker_game_enqueue_scripts() {
-    $image_url = plugins_url('img/814476.webp', __FILE__);
+    if (is_page_template('template/clicker-game.php')) {
+        $image_url = plugins_url('img/814476.webp', __FILE__);
 
-    wp_enqueue_style( 'reset', plugins_url('/css/reset.css', __FILE__), array(), get_file_version('/css/reset.css') );
-    wp_enqueue_style( 'custom-fonts', plugins_url('/css/fonts.css', __FILE__), array(), get_file_version('/css/fonts.css') );
-    wp_enqueue_style( 'clicker-game-style', plugins_url('/style.css', __FILE__));
+        wp_enqueue_style( 'reset', get_template_directory_uri() . '/css/reset.css', array(), get_file_version('/css/reset.css') );
+        wp_enqueue_style( 'custom-fonts', get_template_directory_uri() . '/css/fonts.css', array(), get_file_version('/css/fonts.css') );
+        wp_enqueue_style('clicker-game-style', plugins_url('/style.css', __FILE__));
+        wp_enqueue_script('clicker-game-script', plugins_url('/script.js', __FILE__), array(), null, true);
 
-
-    wp_enqueue_script('clicker-game-script', plugins_url('/script.js', __FILE__), array(), null, true);
-
-    wp_localize_script('clicker-game-script', 'clickerGameData', array(
-        'imageUrl' => esc_url($image_url)
-    ));
+        wp_localize_script('clicker-game-script', 'clickerGameData', array(
+            'imageUrl' => esc_url($image_url)
+        ));
+    }
 }
-
 add_action('wp_enqueue_scripts', 'clicker_game_enqueue_scripts');
+
 
 function clicker_game_shortcode() {
     $image_url = plugins_url('img/earth-globe-icon-white-background.png', __FILE__); 
@@ -91,6 +91,6 @@ function clicker_game_shortcode() {
         </div>
     <?php return ob_get_clean();
 }
-
 add_shortcode('clicker_game', 'clicker_game_shortcode');
+
 ?>

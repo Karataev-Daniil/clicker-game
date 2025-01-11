@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', function() {
     let speedBoostMultiplier = 1;
     let coinsPerClick = 1;
     let lastUpdateTimestamp = localStorage.getItem('lastUpdateTimestamp') || Date.now();
-    let elapsedGameTime = 0; // Время в игре
+    let elapsedGameTime = 0;
     let baseMultiplier = 1;
     let bonusSpeedMultiplier = 1;
     let activeSpeedBonuses = [];
@@ -131,15 +131,13 @@ document.addEventListener('DOMContentLoaded', function() {
         button.addEventListener('click', () => {
             const targetTab = button.getAttribute('data-tab');
 
-            // Скрыть все секции улучшений
             upgradeSections.forEach(section => {
                 section.style.display = 'none';
             });
 
-            // Показать выбранную секцию
             const activeSection = document.getElementById(targetTab);
             if (activeSection) {
-                activeSection.style.display = 'block';
+                activeSection.style.display = 'flex';
             }
         });
     });
@@ -153,7 +151,6 @@ document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('balance').innerText = `Баланс: ${totalCoins}`;
             document.getElementById('earn').innerText = `Заработать ${coinsPerClick} доллар(ов)`;
             
-            // Увеличиваем цену на 5%
             cost = Math.ceil(cost * 1.05);
             costElement.querySelector('.price').innerText = `$${cost}`;
         } else {
@@ -169,7 +166,6 @@ document.addEventListener('DOMContentLoaded', function() {
             passiveIncomeRate += 1;
             document.getElementById('balance').innerText = `Баланс: ${totalCoins}`;
             
-            // Увеличиваем цену на 5%
             cost = Math.ceil(cost * 1.05);
             costElement.querySelector('.price').innerText = `$${cost}`;
         } else {
@@ -185,7 +181,6 @@ document.addEventListener('DOMContentLoaded', function() {
             bthMiningRate += 1;
             document.getElementById('balance').innerText = `Баланс: ${totalCoins}`;
             
-            // Увеличиваем цену на 5%
             cost = Math.ceil(cost * 1.05);
             costElement.querySelector('.price').innerText = `$${cost}`;
         } else {
@@ -202,7 +197,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 document.getElementById('balance').innerText = `Баланс: ${totalCoins}`;
                 document.getElementById('base-multiplier').innerText = `x${speedBoostMultiplier}`;
                 
-                // Увеличиваем цену на 5%
                 cost = Math.ceil(cost * 1.05);
                 button.querySelector('.price').innerText = `$${cost}`;
             } else {
@@ -264,7 +258,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     
     function update365DaysCountdown() {
-        // Преобразуем игровое время в дни
         const daysElapsed = Math.floor(elapsedGameTime / (24 * 60 * 60));
         const remainingDays = 365 - daysElapsed;
 
@@ -272,16 +265,13 @@ document.addEventListener('DOMContentLoaded', function() {
             `Осталось времени: ${remainingDays} дн.`;
 
         if (remainingDays <= 0) {
-            // Сбросить таймер, если прошло 365 дней
             alert('365 дней прошло! Время для нового цикла.');
-            elapsedGameTime = 0; // Сбрасываем игровое время
+            elapsedGameTime = 0;
         }
     }
     
 
-
-
-    const starField = document.querySelector('.background-stars'); // Измените здесь
+    const starField = document.querySelector('.background-stars');
     const colors = ['#ffcc00', '#ff6699', '#3399ff', '#66ccff', '#cc99ff'];
 
     function createStar() {
@@ -293,33 +283,16 @@ document.addEventListener('DOMContentLoaded', function() {
         star.style.width = `${Math.random() * 2 + 1}px`; 
         star.style.height = star.style.width; 
 
-        // Позиция звезды
         star.style.top = `${Math.random() * 100}vh`;
         star.style.left = `${Math.random() * 100}vw`;
 
-        // Анимация звезды
         const animationDuration = Math.random() * 1 + 0.5; 
         star.style.animation = `twinkle ${animationDuration}s infinite alternate`;
 
         starField.appendChild(star);
     }
 
-    // Создание множества звезд
     for (let i = 0; i < 200; i++) {
         createStar();
     }
-
-    // CSS для анимации
-    const style = document.createElement('style');
-    style.innerHTML = `
-        @keyframes twinkle {
-            0% {
-                transform: scale(1);
-            }
-            100% {
-                transform: scale(1.5);
-            }
-        }
-    `;
-    document.head.appendChild(style);
 });
