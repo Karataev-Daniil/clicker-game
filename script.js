@@ -3,10 +3,11 @@ document.addEventListener('DOMContentLoaded', function() {
     let incomeTimer;
     let countdownTimers = {};
     let elapsedTime = 0;
-    let passiveIncomeRate = 0;
-    let totalCoins = 0;
-    let totalBTH = 10;
-    let bthMiningRate = 0;
+    let passiveSpeedMultiplier = 1;
+    let passiveCoins = 0;
+    let totalCoins = 1000;
+    let totalBTH = 5;
+    let passiveBTH = 0;
     let bthMiningInterval = 300;
     let speedBoostMultiplier = 1;
     let coinsPerClick = 1;
@@ -44,9 +45,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function updateTimer() {
         totalElapsedTime += (1 * speedBoostMultiplier / 100);
-        
+
         const daysElapsed = Math.floor(totalElapsedTime / 86400);
-    
         const elapsedTimeToday = totalElapsedTime % 86400;
     
         const hours = Math.floor(elapsedTimeToday / 3600);
@@ -71,17 +71,17 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function earnPassiveIncome() {
         const totalMultiplier = baseMultiplier + activeSpeedBonuses.reduce((sum, bonus) => sum + bonus.multiplier, 0);
-        totalCoins += passiveIncomeRate * totalMultiplier;
+        totalCoins += passiveCoins * totalMultiplier;
         document.getElementById('balance').innerText = `Баланс: ${totalCoins}`;
     }
 
     function updateIncomeDisplay() {
-        document.getElementById('income').innerText = `Доход: ${passiveIncomeRate}`;
-        document.getElementById('bth-income').innerText = `Доход bth: ${bthMiningRate} / 5 мин`;
+        document.getElementById('income').innerText = `Доход: ${passiveCoins}`;
+        document.getElementById('bth-income').innerText = `Доход bth: ${passiveBTH} / 5 мин`;
     }
 
     function mineBTH() {
-        totalBTH += bthMiningRate;
+        totalBTH += passiveBTH;
         updateIncomeDisplay();
     }
 
@@ -95,7 +95,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const timeDifference = Math.floor((currentTime - lastUpdateTimestamp) / 1000);
 
         if (timeDifference > 0) {
-            const earnedCoins = timeDifference * passiveIncomeRate;
+            const earnedCoins = timeDifference * passiveCoins;
             totalCoins += earnedCoins;
             lastUpdateTimestamp = currentTime;
             localStorage.setItem('lastUpdateTimestamp', lastUpdateTimestamp);
@@ -105,7 +105,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function startIncomeTimer() {
         incomeTimer = setInterval(() => {
-            if (passiveIncomeRate > 0) {
+            if (passiveCoins > 0) {
                 earnPassiveIncome();
             }
         }, 1000);
@@ -169,7 +169,7 @@ document.addEventListener('DOMContentLoaded', function() {
         let cost = parseInt(costElement.querySelector('.price').innerText.replace('$', ''));
         if (totalCoins >= cost) {
             totalCoins -= cost;
-            passiveIncomeRate += 1;
+            passiveCoins += 1;
             document.getElementById('balance').innerText = `Баланс: ${totalCoins}`;
             
             cost = Math.ceil(cost * 1.05);
@@ -184,7 +184,7 @@ document.addEventListener('DOMContentLoaded', function() {
         let cost = parseInt(costElement.querySelector('.price').innerText.replace('$', ''));
         if (totalCoins >= cost) {
             totalCoins -= cost;
-            bthMiningRate += 1;
+            passiveBTH += 1;
             document.getElementById('balance').innerText = `Баланс: ${totalCoins}`;
             
             cost = Math.ceil(cost * 1.05);
@@ -229,7 +229,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     clearInterval(countdownTimers[bonusId]);
                     speedBoostMultiplier -= bonusSpeedMultiplier; 
                     activeSpeedBonuses.pop(); 
-                    alert('Бонус ускорения времени закончился!');
                     updateBonusList(); 
                 }
             }, 1000);
