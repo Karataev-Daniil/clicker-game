@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', function() {
     let elapsedTime = 0;
     let passiveIncomeRate = 0;
     let totalCoins = 0;
-    let totalBTH = 0;
+    let totalBTH = 10;
     let bthMiningRate = 0;
     let bthMiningInterval = 300;
     let speedBoostMultiplier = 1;
@@ -15,6 +15,9 @@ document.addEventListener('DOMContentLoaded', function() {
     let baseMultiplier = 1;
     let bonusSpeedMultiplier = 1;
     let activeSpeedBonuses = [];
+    let totalElapsedTime = 0;
+    let dayStartTime = 0;
+    let earthRotation = 0;
 
     function showPopup(message, missingType = null) {
         const popup = document.getElementById('popup-message');
@@ -40,25 +43,28 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('popup-close').onclick = closePopup;
 
     function updateTimer() {
-        elapsedTime += (1 * speedBoostMultiplier / 100);
-        elapsedGameTime += (1 * speedBoostMultiplier / 100);
+        totalElapsedTime += (1 * speedBoostMultiplier / 100);
         
-        if (Math.floor(elapsedGameTime) >= 86400) {
-            elapsedTime = 0;
-        }
-        
-        const hours = Math.floor(elapsedTime / 3600);
-        const minutes = Math.floor((elapsedTime % 3600) / 60);
-        const seconds = Math.floor(elapsedTime % 60);
+        const daysElapsed = Math.floor(totalElapsedTime / 86400);
+    
+        const elapsedTimeToday = totalElapsedTime % 86400;
+    
+        const hours = Math.floor(elapsedTimeToday / 3600);
+        const minutes = Math.floor((elapsedTimeToday % 3600) / 60);
+        const seconds = Math.floor(elapsedTimeToday % 60);
+    
         document.getElementById('timer').innerText =
             `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
     
-        update365DaysCountdown();
+        document.getElementById('countdown-365').innerText = `День: ${daysElapsed + 1}`;
     
-        if (bthMiningRate > 0 && Math.floor(elapsedTime) % bthMiningInterval === 0) {
-            mineBTH();
+        earthRotation += 360 / 86400;
+    
+        if (earthRotation >= 360) {
+            earthRotation = 0;
         }
     
+        update365DaysCountdown();
         rotatePlanet();
         updateIncomeDisplay();
     }
@@ -76,12 +82,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function mineBTH() {
         totalBTH += bthMiningRate;
-        updateBTHDisplay();
+        updateIncomeDisplay();
     }
 
     function rotatePlanet() {
-        const rotationDegree = (elapsedTime / 86400) * 360;
-        document.getElementById('planet').style.transform = `rotate(${rotationDegree}deg)`;
+        const earth = document.getElementById('planet');
+        earth.style.transform = `rotate(${earthRotation}deg)`;
     }
 
     function updateCoinsBasedOnRealTime() {

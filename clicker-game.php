@@ -6,17 +6,27 @@ Version: 0.6
 Author: Daniil Karataev
 */
 
+function clicker_game_get_file_version($file_path) {
+    $file = plugin_dir_path(__FILE__) . $file_path;
+    return file_exists($file) ? filemtime($file) : '1.0.0';
+}
+
 function clicker_game_enqueue_scripts() {
     if (is_page_template('template/clicker-game.php')) {
         $image_url = plugins_url('img/814476.webp', __FILE__);
 
-        wp_enqueue_style( 'reset', get_template_directory_uri() . '/css/reset.css', array(), get_file_version('/css/reset.css') );
-        wp_enqueue_style( 'custom-fonts', get_template_directory_uri() . '/css/fonts.css', array(), get_file_version('/css/fonts.css') );
-        wp_enqueue_style('clicker-game-style', plugins_url('/style.css', __FILE__));
-        wp_enqueue_script('clicker-game-script', plugins_url('/script.js', __FILE__), array(), null, true);
+        wp_enqueue_style('reset',                get_template_directory_uri() . '/css/reset.css', array(), clicker_game_get_file_version('/css/reset.css'));
+        wp_enqueue_style('custom-fonts',         get_template_directory_uri() . '/css/fonts.css', array(), clicker_game_get_file_version('/css/fonts.css'));
+
+        wp_enqueue_style('clicker-game-style',   plugins_url('/style.css', __FILE__),             array(), clicker_game_get_file_version('style.css'));
+        wp_enqueue_style('popup-style',          plugins_url('css/popup.css', __FILE__),          array(), clicker_game_get_file_version('css/popup.css'));
+        wp_enqueue_style('upgrades-style',       plugins_url('css/upgrades.css', __FILE__),       array(), clicker_game_get_file_version('css/upgrades.css'));
+        wp_enqueue_style('game-menu-style',      plugins_url('css/game-menu.css', __FILE__),      array(), clicker_game_get_file_version('css/game-menu.css'));
+
+        wp_enqueue_script('clicker-game-script', plugins_url('/script.js', __FILE__),             array('jquery'), clicker_game_get_file_version('script.js'), true);
 
         wp_localize_script('clicker-game-script', 'clickerGameData', array(
-            'imageUrl' => esc_url($image_url)
+            'imageUrl' => $image_url,
         ));
     }
 }

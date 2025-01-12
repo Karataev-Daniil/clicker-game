@@ -75,87 +75,6 @@
     font-family: 'Inter';
     text-decoration: none;
 }
-.page-template-clicker-game .user-status {
-    position: absolute;
-    gap: 20px;
-    top: 0;
-    left: 50%;
-    transform: translate(-50%, 0);
-    background: none;
-    padding: 10px 0px;
-    flex-direction: row;
-    justify-content: center;
-}
-.page-template-clicker-game .user-status p {
-    color: var(--gray_0);
-}
-
-.game-menu {
-    position: absolute;
-    top: 10%;
-    display: flex;
-    gap: 20px;
-}
-.game-menu #timer {
-    width: 250px;
-    padding: 10px 20px;
-    display: flex;
-    justify-content: center;
-    border: 3px solid var(--violet_-2);
-    background-color: var(--violet_-4);
-    border-radius: 24px;
-    color: var(--violet_-2);
-    font-size: 56px;
-    font-family: 'inter';
-}
-
-.game-menu #income {
-    color: var(--success_-1);
-    font-size: 24px;
-    font-family: 'inter';
-}
-
-.game-menu #balance {
-    color: var(--success_-1);
-    font-size: 24px;
-    font-family: 'inter';
-}
-
-.game-menu .income {
-    width: 250px;
-    padding: 10px 20px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 10px;
-    border: 3px solid var(--success_-1);
-    background-color: var(--success_-3);
-    border-radius: 24px;
-}
-
-.game-menu #bth-income {
-    color: var(--red_-1);
-    font-size: 24px;
-    font-family: 'inter';
-}
-
-.game-menu #bth-balance {
-    color: var(--red_-1);
-    font-size: 24px;
-    font-family: 'inter';
-}
-
-.game-menu .bth-income {
-    width: 250px;
-    padding: 10px 20px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 10px;
-    border: 3px solid var(--red_-1);
-    background-color: var(--red_-3);
-    border-radius: 24px;
-}
 
 #earn {
     position: absolute;
@@ -168,59 +87,6 @@
     background-color: var(--violet_-4);
     border-radius: 56px;
     color: var(--violet_-2);
-}
-
-#info-upgrades {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    z-index: 2;
-    padding: 20px;
-    width: calc(300px - 40px);
-    position: absolute;
-    left: 20px;
-    top: 10%;
-    border: 3px solid var(--violet_-2);
-    background-color: var(--violet_-4);
-    border-radius: 24px;
-}
-
-#info-upgrades h3 {
-    font-size: 24px;
-    color: var(--success_1);
-    font-family: 'Inter';
-}
-
-#upgrade-popup {
-    z-index: 2;
-    padding: 20px;
-    width: calc(300px - 40px);
-    position: absolute;
-    right: 20px;
-    top: 10%;
-    gap: 10px;
-    border: 3px solid var(--violet_-2);
-    background-color: var(--violet_-4);
-    border-radius: 24px;
-}
-
-#upgrade-popup .tabs {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-}
-
-.upgrade-section {
-    gap: 8px;
-    flex-direction: column;
-    display: flex;
-}
-
-.upgrade-section h3 {
-    margin: 20px 0 0;
-    font-size: 24px;
-    color: var(--success_1);
-    font-family: 'Inter';
 }
 
 #countdown-365,
@@ -251,29 +117,6 @@
     font-size: 14px;
 }
 
-.btn {
-    display: flex;
-    justify-content: space-between;
-    width: 100%;
-    border: 1px solid var(--violet_-2);
-    background-color: var(--violet_-4);
-    border-radius: 5px;
-    color: var(--gray_0);
-    font-family: 'Inter';
-}
-
-.btn .price {
-    text-align: left;
-    color: var(--success_0);
-    width: 30px;
-}
-
-.btn .price.bth {
-    text-align: left;
-    color: var(--red_-1);
-    width: 30px;
-}
-
 .planet {
     width: 500px;
     height: 500px;
@@ -294,52 +137,6 @@
 
     background-image: var(--planet-img);
     background-size: 100% 100%;
-}
-
-.popup {
-    display: none;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 1000;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-}
-
-.popup-content {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 18px;
-    width: 500px;
-    padding: 20px;
-    position: relative;
-    top: 50%;
-    left: 50%; 
-    transform: translate(-50%, -50%); 
-    border: 3px solid var(--violet_-2);
-    background-color: var(--violet_-4);
-    border-radius: 24px;
-    text-align: center;
-}
-
-#popup-text {
-    color: var(--red_-1);
-    font-family: 'Inter';
-    font-size: 22px;
-}
-
-#popup-close {
-    padding: 5px 10px;
-    font-family: 'Inter';
-    font-size: 16px;
-    color: var(--success_-1);
-    border: 3px solid var(--success_-1);
-    background-color: var(--success_-3);
-    border-radius: 24px;
-    cursor: pointer;
 }
 
 .background-stars {
