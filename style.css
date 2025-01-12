@@ -87,6 +87,9 @@
     background-color: var(--violet_-4);
     border-radius: 56px;
     color: var(--violet_-2);
+    user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
 }
 
 #countdown-365,

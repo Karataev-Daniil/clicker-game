@@ -6,8 +6,8 @@ document.addEventListener('DOMContentLoaded', function() {
     let passiveSpeedMultiplier = 1;
     let passiveCoins = 0;
     let totalCoins = 1000;
-    let totalBTH = 5;
     let passiveBTH = 0;
+    let totalBTH = 10;
     let bthMiningInterval = 300;
     let speedBoostMultiplier = 1;
     let coinsPerClick = 1;
@@ -45,7 +45,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function updateTimer() {
         totalElapsedTime += (1 * speedBoostMultiplier / 100);
-
         const daysElapsed = Math.floor(totalElapsedTime / 86400);
         const elapsedTimeToday = totalElapsedTime % 86400;
     
@@ -56,7 +55,8 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('timer').innerText =
             `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
     
-        document.getElementById('countdown-365').innerText = `День: ${daysElapsed + 1}`;
+        const remainingDays = 365 - daysElapsed;
+        document.getElementById('countdown-365').innerText = `Осталось дней: ${remainingDays}`;
     
         earthRotation += 360 / 86400;
     
@@ -68,13 +68,13 @@ document.addEventListener('DOMContentLoaded', function() {
         rotatePlanet();
         updateIncomeDisplay();
     }
-
+    
     function earnPassiveIncome() {
-        const totalMultiplier = baseMultiplier + activeSpeedBonuses.reduce((sum, bonus) => sum + bonus.multiplier, 0);
+        const totalMultiplier = baseMultiplier;
         totalCoins += passiveCoins * totalMultiplier;
         document.getElementById('balance').innerText = `Баланс: ${totalCoins}`;
     }
-
+    
     function updateIncomeDisplay() {
         document.getElementById('income').innerText = `Доход: ${passiveCoins}`;
         document.getElementById('bth-income').innerText = `Доход bth: ${passiveBTH} / 5 мин`;
@@ -213,27 +213,28 @@ document.addEventListener('DOMContentLoaded', function() {
 
     document.getElementById('activate-bonus').onclick = () => {
         if (totalBTH >= 1) {
-            totalBTH -= 1; 
-            bonusSpeedMultiplier = 50; 
+            totalBTH -= 1;
+            bonusSpeedMultiplier = 50; // Для активных действий
             speedBoostMultiplier += bonusSpeedMultiplier;
             const bonusId = activeSpeedBonuses.length;
-            activeSpeedBonuses.push({ multiplier: bonusSpeedMultiplier, duration: 300, remainingTime: 300 }); 
+            activeSpeedBonuses.push({ multiplier: bonusSpeedMultiplier, duration: 300, remainingTime: 300 });
+    
             document.getElementById('bth-balance').innerText = `Баланс bth: ${totalBTH}`;
-
-            clearInterval(countdownTimers[bonusId]); 
+    
+            clearInterval(countdownTimers[bonusId]);
             countdownTimers[bonusId] = setInterval(() => {
-                activeSpeedBonuses[bonusId].remainingTime--; 
-                updateBonusList(bonusId); 
-
+                activeSpeedBonuses[bonusId].remainingTime--;
+                updateBonusList(bonusId);
+    
                 if (activeSpeedBonuses[bonusId].remainingTime <= 0) {
                     clearInterval(countdownTimers[bonusId]);
-                    speedBoostMultiplier -= bonusSpeedMultiplier; 
-                    activeSpeedBonuses.pop(); 
-                    updateBonusList(); 
+                    speedBoostMultiplier -= bonusSpeedMultiplier;
+                    activeSpeedBonuses.pop();
+                    updateBonusList();
                 }
             }, 1000);
-
-            updateBonusList(bonusId); 
+    
+            updateBonusList(bonusId);
         } else {
             showPopup('Недостаточно bth для активации бонуса!', 'missing-bth');
         }
