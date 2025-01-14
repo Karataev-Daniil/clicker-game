@@ -208,6 +208,10 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     };
 
+    function updateBaseMultiplier() {
+        document.getElementById('base-multiplier').innerText = `x${speedBoostMultiplier}`;
+    }
+
     document.querySelectorAll('.speed-btn').forEach(button => {
         button.onclick = () => {
             let cost = parseInt(button.querySelector('.price').innerText.replace('$', ''));
@@ -215,8 +219,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 totalCoins -= cost;
                 speedBoostMultiplier += parseInt(button.getAttribute('data-speed'));
                 document.getElementById('balance').innerText = `Баланс: ${totalCoins}`;
-                document.getElementById('base-multiplier').innerText = `x${speedBoostMultiplier}`;
-                
+
+                updateBaseMultiplier();
+
                 cost = Math.ceil(cost * 1.05);
                 button.querySelector('.price').innerText = `$${cost}`;
             } else {
@@ -230,65 +235,60 @@ document.addEventListener('DOMContentLoaded', function() {
             totalBTH -= 1;
             const bonusSpeedMultiplier = 50;
             speedBoostMultiplier += bonusSpeedMultiplier;
-    
-            // Добавляем новый бонус в список активных бонусов
+
             const bonusId = activeSpeedBonuses.length;
             activeSpeedBonuses.push({
                 multiplier: bonusSpeedMultiplier,
                 duration: 30,
                 remainingTime: 30,
-                timer: null  // добавляем свойство для хранения таймера
+                timer: null
             });
-    
-            // Обновляем баланс BTH
+
             document.getElementById('bth-balance').innerText = `Баланс bth: ${totalBTH}`;
-    
-            // Запуск таймера для нового бонуса
+
+            updateBaseMultiplier();
+
             activeSpeedBonuses[bonusId].timer = setInterval(() => {
-                activeSpeedBonuses[bonusId].remainingTime--;  // Уменьшаем время бонуса
-                console.log(`Бонус ${bonusId}: оставшееся время - ${activeSpeedBonuses[bonusId].remainingTime}s`);
-    
-                // Обновляем отображение бонуса
+                activeSpeedBonuses[bonusId].remainingTime--;
+
                 updateBonusList(bonusId);
-    
-                // Когда время бонуса истекает
+
                 if (activeSpeedBonuses[bonusId].remainingTime <= 0) {
-                    clearInterval(activeSpeedBonuses[bonusId].timer);  // Останавливаем таймер
-                    speedBoostMultiplier -= bonusSpeedMultiplier;  // Убираем бонус из мультипликатора
-    
-                    // Логирование для отладки
-                    console.log(`Бонус ${bonusId} завершен. Убираем бонус из списка.`);
-    
-                    activeSpeedBonuses.splice(bonusId, 1);  // Удаляем бонус из списка
-                    updateBonusList();  // Обновляем интерфейс, чтобы отобразить изменения
+                    clearInterval(activeSpeedBonuses[bonusId].timer);
+                    speedBoostMultiplier -= bonusSpeedMultiplier;
+
+                    activeSpeedBonuses.splice(bonusId, 1);
+                    updateBonusList();
+
+                    updateBaseMultiplier();
                 }
-            }, 1000);  // Таймер с интервалом в 1 секунду
-    
-            // Обновляем список бонусов сразу после активации
+            }, 1000);
+
             updateBonusList(bonusId);
-    
+
         } else {
             showPopup('Недостаточно bth для активации бонуса!', 'missing-bth');
         }
     };
-    
+
     setInterval(() => {
         for (let i = activeSpeedBonuses.length - 1; i >= 0; i--) {
             const bonus = activeSpeedBonuses[i];
-    
+
             if (bonus.remainingTime <= 0) {
                 clearInterval(bonus.timer);
                 speedBoostMultiplier -= bonus.multiplier;
-    
-                console.log(`Бонус ${i} завершен. Убираем бонус из списка.`);
+
                 activeSpeedBonuses.splice(i, 1);
+
+                updateBaseMultiplier();
             } else {
                 bonus.remainingTime--;
             }
         }
-    
+
         updateBonusList();
-    }, 1000);    
+    }, 1000);
     
     function updateBonusList(bonusId = null) {
         const bonusList = document.getElementById('bonus-list');
