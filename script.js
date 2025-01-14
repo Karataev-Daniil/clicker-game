@@ -5,9 +5,9 @@ document.addEventListener('DOMContentLoaded', function() {
     let elapsedTime = 0;
     let passiveSpeedMultiplier = 1;
     let passiveCoins = 0;
-    let totalCoins = 0;
+    let totalCoins = 1000;
     let passiveBTH = 0;
-    let totalBTH = 0;
+    let totalBTH = 10;
     let bthMiningInterval = 300;
     let speedBoostMultiplier = 1;
     let coinsPerClick = 1;
@@ -45,28 +45,42 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function updateTimer() {
         totalElapsedTime += (1 * speedBoostMultiplier / 100);
+        
         const daysElapsed = Math.floor(totalElapsedTime / 86400);
         const elapsedTimeToday = totalElapsedTime % 86400;
-    
+        
         const hours = Math.floor(elapsedTimeToday / 3600);
         const minutes = Math.floor((elapsedTimeToday % 3600) / 60);
         const seconds = Math.floor(elapsedTimeToday % 60);
-    
+        
         document.getElementById('timer').innerText =
             `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
-    
+        
         const remainingDays = 365 - daysElapsed;
         document.getElementById('countdown-365').innerText = `Осталось дней: ${remainingDays}`;
-    
+
         earthRotation += 360 / 86400;
-    
+        
         if (earthRotation >= 360) {
             earthRotation = 0;
         }
-    
+        
         update365DaysCountdown();
         rotatePlanet();
         updateIncomeDisplay();
+    }
+    
+    function update365DaysCountdown() {
+        const daysElapsed = Math.floor(totalElapsedTime / (24 * 60 * 60));
+        const remainingDays = 365 - daysElapsed;
+    
+        document.getElementById('countdown-365').innerText = 
+            `Осталось времени: ${remainingDays} дн.`;
+    
+        if (remainingDays <= 0) {
+            alert('365 дней прошло! Время для нового цикла.');
+            totalElapsedTime = 0;
+        }
     }
     
     function earnPassiveIncome() {
@@ -214,31 +228,67 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('activate-bonus').onclick = () => {
         if (totalBTH >= 1) {
             totalBTH -= 1;
-            bonusSpeedMultiplier = 50; // Для активных действий
+            const bonusSpeedMultiplier = 50;
             speedBoostMultiplier += bonusSpeedMultiplier;
-            const bonusId = activeSpeedBonuses.length;
-            activeSpeedBonuses.push({ multiplier: bonusSpeedMultiplier, duration: 300, remainingTime: 300 });
     
+            // Добавляем новый бонус в список активных бонусов
+            const bonusId = activeSpeedBonuses.length;
+            activeSpeedBonuses.push({
+                multiplier: bonusSpeedMultiplier,
+                duration: 30,
+                remainingTime: 30,
+                timer: null  // добавляем свойство для хранения таймера
+            });
+    
+            // Обновляем баланс BTH
             document.getElementById('bth-balance').innerText = `Баланс bth: ${totalBTH}`;
     
-            clearInterval(countdownTimers[bonusId]);
-            countdownTimers[bonusId] = setInterval(() => {
-                activeSpeedBonuses[bonusId].remainingTime--;
+            // Запуск таймера для нового бонуса
+            activeSpeedBonuses[bonusId].timer = setInterval(() => {
+                activeSpeedBonuses[bonusId].remainingTime--;  // Уменьшаем время бонуса
+                console.log(`Бонус ${bonusId}: оставшееся время - ${activeSpeedBonuses[bonusId].remainingTime}s`);
+    
+                // Обновляем отображение бонуса
                 updateBonusList(bonusId);
     
+                // Когда время бонуса истекает
                 if (activeSpeedBonuses[bonusId].remainingTime <= 0) {
-                    clearInterval(countdownTimers[bonusId]);
-                    speedBoostMultiplier -= bonusSpeedMultiplier;
-                    activeSpeedBonuses.pop();
-                    updateBonusList();
-                }
-            }, 1000);
+                    clearInterval(activeSpeedBonuses[bonusId].timer);  // Останавливаем таймер
+                    speedBoostMultiplier -= bonusSpeedMultiplier;  // Убираем бонус из мультипликатора
     
+                    // Логирование для отладки
+                    console.log(`Бонус ${bonusId} завершен. Убираем бонус из списка.`);
+    
+                    activeSpeedBonuses.splice(bonusId, 1);  // Удаляем бонус из списка
+                    updateBonusList();  // Обновляем интерфейс, чтобы отобразить изменения
+                }
+            }, 1000);  // Таймер с интервалом в 1 секунду
+    
+            // Обновляем список бонусов сразу после активации
             updateBonusList(bonusId);
+    
         } else {
             showPopup('Недостаточно bth для активации бонуса!', 'missing-bth');
         }
     };
+    
+    setInterval(() => {
+        for (let i = activeSpeedBonuses.length - 1; i >= 0; i--) {
+            const bonus = activeSpeedBonuses[i];
+    
+            if (bonus.remainingTime <= 0) {
+                clearInterval(bonus.timer);
+                speedBoostMultiplier -= bonus.multiplier;
+    
+                console.log(`Бонус ${i} завершен. Убираем бонус из списка.`);
+                activeSpeedBonuses.splice(i, 1);
+            } else {
+                bonus.remainingTime--;
+            }
+        }
+    
+        updateBonusList();
+    }, 1000);    
     
     function updateBonusList(bonusId = null) {
         const bonusList = document.getElementById('bonus-list');
@@ -258,24 +308,9 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     
         if (activeSpeedBonuses.length === 0) {
-            bonusList.innerText = 'Нет активных бонусов';
+            
         }
     }
-
-    
-    function update365DaysCountdown() {
-        const daysElapsed = Math.floor(elapsedGameTime / (24 * 60 * 60));
-        const remainingDays = 365 - daysElapsed;
-
-        document.getElementById('countdown-365').innerText = 
-            `Осталось времени: ${remainingDays} дн.`;
-
-        if (remainingDays <= 0) {
-            alert('365 дней прошло! Время для нового цикла.');
-            elapsedGameTime = 0;
-        }
-    }
-    
 
     const starField = document.querySelector('.background-stars');
     const colors = ['#ffcc00', '#ff6699', '#3399ff', '#66ccff', '#cc99ff'];
