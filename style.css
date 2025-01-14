@@ -145,7 +145,7 @@
 .background-stars {
     position: relative;
     overflow: hidden;
-    background: radial-gradient(circle, var(--violet_-4), var(--violet_-5), var(--gray_-6));
+    background: radial-gradient(circle, var(--violet_-5), var(--gray_-6));
     width: 100%;
     height: 100%;
     z-index: -1;
