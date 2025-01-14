@@ -20,6 +20,16 @@ document.addEventListener('DOMContentLoaded', function() {
     let dayStartTime = 0;
     let earthRotation = 0;
 
+    function startGame() {
+        document.getElementById('balance').innerText = `Баланс: ${totalCoins}`;
+        document.getElementById('bth-balance').innerText = `Баланс bth: ${totalBTH}`;
+        
+        startIncomeTimer();
+        startGameTimer();
+    }
+
+    startGame();
+
     function showPopup(message, missingType = null) {
         const popup = document.getElementById('popup-message');
         const popupText = document.getElementById('popup-text');
@@ -94,27 +104,9 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('bth-income').innerText = `Доход bth: ${passiveBTH} / 5 мин`;
     }
 
-    function mineBTH() {
-        totalBTH += passiveBTH;
-        updateIncomeDisplay();
-    }
-
     function rotatePlanet() {
         const earth = document.getElementById('planet');
         earth.style.transform = `rotate(${earthRotation}deg)`;
-    }
-
-    function updateCoinsBasedOnRealTime() {
-        const currentTime = Date.now();
-        const timeDifference = Math.floor((currentTime - lastUpdateTimestamp) / 1000);
-
-        if (timeDifference > 0) {
-            const earnedCoins = timeDifference * passiveCoins;
-            totalCoins += earnedCoins;
-            lastUpdateTimestamp = currentTime;
-            localStorage.setItem('lastUpdateTimestamp', lastUpdateTimestamp);
-            document.getElementById('balance').innerText = `Баланс: ${totalCoins}`;
-        }
     }
 
     function startIncomeTimer() {
@@ -131,13 +123,6 @@ document.addEventListener('DOMContentLoaded', function() {
             updateTimer();
         }, 10);
     }
-
-    function startGame() {
-        startIncomeTimer();
-        startGameTimer();
-    }
-
-    startGame();
 
     document.getElementById('earn').onclick = () => {
         totalCoins += coinsPerClick;
