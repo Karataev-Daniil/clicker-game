@@ -5,9 +5,9 @@ document.addEventListener('DOMContentLoaded', function() {
     let elapsedTime = 0;
     let passiveSpeedMultiplier = 1;
     let passiveCoins = 0;
-    let totalCoins = 1000;
+    let totalCoins = 0;
     let passiveBTH = 0;
-    let totalBTH = 10;
+    let totalBTH = 0;
     let bthMiningInterval = 300;
     let speedBoostMultiplier = 1;
     let coinsPerClick = 1;
